@@ -1,0 +1,20 @@
+# create virtual environment
+python -m venv env
+
+# activate virtual environment for package installation
+<path/to/virtualenvironment>/activate
+
+# installs langchain, ollama and chroma
+pip install langchain langchain-ollama langchain-chroma
+
+# installs the LangChain integration package for Ollama, enabling you to use ChatOllama, OllamaEmbeddings, and more inside LangChain.
+pip install -U langchain-ollama
+
+# download ollama
+# use llama3.2 model
+ollama pull llama3.2 (in terminal)
+# use embedding model
+ollama pull mxbai-embed-large
+
+# install pandas package
+pip install pandas

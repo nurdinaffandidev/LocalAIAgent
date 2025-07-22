@@ -31,7 +31,7 @@ def get_bool_input(prompt_message):
         elif input_val in ('no', 'n'):
             return False
         else:
-            print("Please enter y/n: ")
+            print("Please enter \"y\"/\"n\" ")
 
 
 def run_ai_agent(is_stream):

@@ -23,19 +23,48 @@ prompt = ChatPromptTemplate.from_template(system_template)
 # Chain together: prompt → model → output
 chain = prompt | model
 
-while True:
-    print("----------------------------------")
-    question = input("Ask your question (/q to quit): ")
-    if question == "/q":
-        print("Goodbye 👋")
-        break
+def get_bool_input(prompt_message):
+    while True:
+        input_val = input(prompt_message).strip().lower()
+        if input_val in ('yes', 'y'):
+            return True
+        elif input_val in ('no', 'n'):
+            return False
+        else:
+            print("Please enter y/n: ")
 
-    # Use the retriever (likely vector-based) to get relevant reviews
-    reviews = retriever.invoke(question)
-    result = chain.invoke({
-        "reviews" : reviews,
-        "question" : question # Eg.: "What is the best pizza in town?"
-    })
-    print("Result: ")
-    print("==================================")
-    print(result, end="\n\n")
+
+def run_ai_agent(is_stream):
+    while True:
+        print("\n----------------------------------")
+        question = input("Ask your question (/q to quit): ")
+        if question == "/q":
+            print("Goodbye 👋")
+            break
+
+        # Use the retriever (likely vector-based) to get relevant reviews
+        reviews = retriever.invoke(question)
+
+        if is_stream:
+            # Use streams
+            print("Result: (with streaming)")
+            print("==================================")
+            result = chain.stream({  # result type = <class 'generator'>
+                "reviews": reviews,
+                "question": question  # Eg.: "What is the best pizza in town?"
+            })
+            for chunk in result:
+                print(chunk, end="", flush=True)
+        else:
+            result = chain.invoke({
+                "reviews": reviews,
+                "question": question  # Eg.: "What is the best pizza in town?"
+            })
+            print("Result: (no streaming)")
+            print("==================================")
+            print(result, end="\n\n")
+
+
+if __name__ == "__main__":
+    is_stream = get_bool_input("Use streaming? (y/n): ")
+    run_ai_agent(is_stream)
